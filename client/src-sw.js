@@ -27,4 +27,25 @@ warmStrategyCache({
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // TODO: Implement asset caching
-registerRoute();
+// Registering a route for certain types of assets (style, script, worker)
+registerRoute(
+  // Using a function to determine if the request's destination is one of the specified types
+  ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
+  // Using Stale-While-Revalidate strategy for caching assets
+  new StaleWhileRevalidate({
+    // Setting a name for the cache
+    cacheName: 'asset-cache',
+    // Adding plugins to customize caching behavior
+    plugins: [
+      // CacheableResponsePlugin to specify which response statuses are cacheable
+      new CacheableResponsePlugin({
+        statuses: [0, 200], // Cache responses with status codes 0 (offline) and 200 (OK)
+      }),
+      // ExpirationPlugin to specify maximum entries and age for cached items
+      new ExpirationPlugin({
+        maxEntries: 60, // Maximum number of entries in the cache
+        maxAgeSeconds: 30 * 24 * 60 * 60, // Maximum age of cached items (30 days)
+      })
+    ],
+  })
+);
