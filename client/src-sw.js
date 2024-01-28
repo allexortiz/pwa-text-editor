@@ -1,51 +1,38 @@
-const { offlineFallback, warmStrategyCache } = require('workbox-recipes');
-const { CacheFirst } = require('workbox-strategies');
-const { registerRoute } = require('workbox-routing');
-const { CacheableResponsePlugin } = require('workbox-cacheable-response');
-const { ExpirationPlugin } = require('workbox-expiration');
-const { precacheAndRoute } = require('workbox-precaching/precacheAndRoute');
+const butInstall = document.getElementById('buttonInstall');
 
-precacheAndRoute(self.__WB_MANIFEST);
+// Logic for installing the PWA
+// TODO: Add an event handler to the `beforeinstallprompt` event
+window.addEventListener('beforeinstallprompt', (event) => {
+    console.log('hit')
+    console.log("event" + event)
+    event.preventDefault();
+    // Store the triggered events
+    window.deferredPrompt = event;
 
-const pageCache = new CacheFirst({
-  cacheName: 'page-cache',
-  plugins: [
-    new CacheableResponsePlugin({
-      statuses: [0, 200],
-    }),
-    new ExpirationPlugin({
-      maxAgeSeconds: 30 * 24 * 60 * 60,
-    }),
-  ],
+    // Remove the hidden class from the button.
+    butInstall.classList.toggle('hidden', false);
 });
 
-warmStrategyCache({
-  urls: ['/index.html', '/'],
-  strategy: pageCache,
+// TODO: Implement a click event handler on the `butInstall` element
+butInstall.addEventListener('click', async () => {
+    const promptEvent = window.deferredPrompt;
+    // console.log(promptEvent)
+    if (!promptEvent) {
+        return;
+    }
+
+    // Show prompt
+    promptEvent.prompt();
+
+    // Reset the deferred prompt variable, it can only be used once.
+    window.deferredPrompt = null;
+
+    butInstall.classList.toggle('hidden', true);
 });
 
-registerRoute(({ request }) => request.mode === 'navigate', pageCache);
-
-// TODO: Implement asset caching
-// Registering a route for certain types of assets (style, script, worker)
-registerRoute(
-  // Using a function to determine if the request's destination is one of the specified types
-  ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
-  // Using Stale-While-Revalidate strategy for caching assets
-  new StaleWhileRevalidate({
-    // Setting a name for the cache
-    cacheName: 'asset-cache',
-    // Adding plugins to customize caching behavior
-    plugins: [
-      // CacheableResponsePlugin to specify which response statuses are cacheable
-      new CacheableResponsePlugin({
-        statuses: [0, 200], // Cache responses with status codes 0 (offline) and 200 (OK)
-      }),
-      // ExpirationPlugin to specify maximum entries and age for cached items
-      new ExpirationPlugin({
-        maxEntries: 60, // Maximum number of entries in the cache
-        maxAgeSeconds: 30 * 24 * 60 * 60, // Maximum age of cached items (30 days)
-      })
-    ],
-  })
-);
+// TODO: Add an handler for the `appinstalled` event
+window.addEventListener('appinstalled', (event) => {
+    // Clear prompt
+    console.log('install hit')
+    window.deferredPrompt = null;
+});
