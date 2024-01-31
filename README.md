@@ -35,3 +35,72 @@ THEN I should have my static assets pre cached upon loading along with subsequen
 WHEN I deploy to Render
 THEN I should have proper build scripts for a webpack application
 ```
+
+## Table of Contents
+- [Description](#description)
+- [Technologies](#technologies)
+- [Links](#links)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Images](#images)
+- [Questions](#questions)
+
+## Description
+This web text editor enables users to create notes or code snippets seamlessly, with or without an internet connection. Leveraging integrated service workers and the Cache API, the application guarantees full functionality even offline. Users can confidently access previously visited pages regardless of internet availability, ensuring reliability in retrieving their content for future use.
+
+## Technologies
+- Node.js
+- Express
+- Webpack (Webpack, webpack-dev-server, WebpackPwaManifest)
+- Babel
+- CSS-Loader
+- Concurrently
+- IndexedDB
+
+## Links
+[Deployment Link](https://pwa-text-editor-isls.onrender.com)
+
+## Installation
+open in intergrated terminal and install the following packages:
+ ```
+npm install express
+npm install --save-dev webpack
+npm install webpack-dev-server --save-dev
+npm install --save-dev webpack-pwa-manifest
+npm install babel
+npm install --save-dev css-loader
+npm install concurrently --save
+npm npm install idb
+```
+
+##  Usage
+After running the project, enter the following code in the client folder:
+
+```
+npm run build
+```
+
+Follow up by entering the following code to start the application:
+
+```
+npm run start:dev
+```
+
+## Images
+The following animation demonstrates the application functionality:
+
+![pwa-gif](assest/images/pwa-gif.gif)
+
+The following image shows the application's `manifest.json` file:
+![manifest.json](assest/images/manifest-json.png)
+
+The following image shows the application's registered service worker:
+![service-worker](assest/images/service-worker.png)
+
+The following image shows the application's IndexedDB storage:
+![IndexedDB-storage](assest/images/IndexedDB-storage.png)
+
+## Questions
+If you have any addition questions feel free to reach me at either my github or email address.
+- [GitHub](https://github.com/allexortiz)
+- [Email](allex.ortiz@outlook.com)
